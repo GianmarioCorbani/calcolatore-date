@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calcolatore di Date con AI</title>
+    <title>Calcolatore di Date</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,22 +12,10 @@
         body {
             font-family: 'Inter', sans-serif;
         }
+        /* Stile personalizzato per gli input di tipo date per mostrare l'icona del calendario */
         input[type="date"]::-webkit-calendar-picker-indicator {
             cursor: pointer;
             filter: invert(0.8);
-        }
-        /* Stile per l'animazione di caricamento */
-        .loader {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #5b21b6; /* purple-700 */
-            border-radius: 50%;
-            width: 32px;
-            height: 32px;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
@@ -35,15 +23,14 @@
 
     <div class="w-full max-w-4xl mx-auto">
         <header class="text-center mb-10">
-            <h1 class="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">Calcolatore di Date con AI</h1>
-            <p class="text-gray-400 mt-2">Esegui calcoli e scopri curiosità sulle date con la potenza di Gemini.</p>
-            <p class="text-gray-400 mt-2">Dott. Gianmario Corbani</p>
+            <h1 class="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">Calcolatore di Date</h1>
+            <p class="text-gray-400 mt-2">Esegui calcoli tra date in modo semplice e veloce.</p>
         </header>
 
         <main class="grid grid-cols-1 lg:grid-cols-2 gap-8">
             
             <!-- Card 1: Aggiungi/Sottrai Giorni -->
-            <div class="bg-gray-800 p-6 rounded-2xl shadow-2xl border border-gray-700 flex flex-col">
+            <div class="bg-gray-800 p-6 rounded-2xl shadow-2xl border border-gray-700">
                 <h2 class="text-2xl font-semibold mb-4 border-b border-gray-600 pb-3">Calcola Data Futura/Passata</h2>
                 <div class="space-y-4">
                     <div>
@@ -54,28 +41,42 @@
                         <label for="days" class="block text-sm font-medium text-gray-300 mb-1">Giorni da Aggiungere/Sottrarre</label>
                         <input type="number" id="days" placeholder="Es. 30 o -15" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 focus:outline-none">
                     </div>
-                    <button id="calculateResultDate" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition-colors duration-300">Calcola Data</button>
+                    
+                    <!-- Pulsanti Preset -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Preset Rapidi:</label>
+                        <div id="preset-buttons" class="grid grid-cols-3 gap-2">
+                            <button data-value="180" data-type="days" class="preset-btn bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-3 rounded-lg text-sm transition-colors duration-200">180 giorni</button>
+                            <button data-value="26" data-type="weeks" class="preset-btn bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-3 rounded-lg text-sm transition-colors duration-200">26 settimane</button>
+                            <button data-value="6" data-type="months" class="preset-btn bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-3 rounded-lg text-sm transition-colors duration-200">6 mesi</button>
+                            <button data-value="50" data-type="weeks" class="preset-btn bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-3 rounded-lg text-sm transition-colors duration-200">50 settimane</button>
+                            <button data-value="52" data-type="weeks" class="preset-btn bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-3 rounded-lg text-sm transition-colors duration-200">52 settimane</button>
+                            <button data-value="1" data-type="years" class="preset-btn bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-3 rounded-lg text-sm transition-colors duration-200">1 anno</button>
+                        </div>
+                         <div id="preset-error" class="text-red-400 text-xs mt-2 h-4"></div>
+                    </div>
+
+                    <button id="calculateResultDate" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition-colors duration-300">
+                        Calcola Data
+                    </button>
                     <div id="resultDateOutput" class="mt-4 text-center bg-gray-900 p-4 rounded-lg min-h-[5rem] flex items-center justify-center">
                         <span class="text-lg font-medium text-gray-400">Il risultato apparirà qui</span>
-                    </div>
-                </div>
-                <div class="mt-4 pt-4 border-t border-gray-700">
-                    <button id="geminiIdeasBtn" class="w-full bg-gradient-to-r from-teal-500 to-cyan-500 text-white font-bold py-3 px-4 rounded-lg transition-transform duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none" disabled>✨ Cosa fare in questo giorno?</button>
-                    <div id="geminiIdeasOutput" class="mt-4 text-left bg-gray-900 p-4 rounded-lg min-h-[6rem] flex items-center justify-center text-gray-400">
-                        <span>I suggerimenti dell'AI appariranno qui.</span>
                     </div>
                 </div>
             </div>
 
             <!-- Card 2: Differenza tra Date -->
-            <div class="bg-gray-800 p-6 rounded-2xl shadow-2xl border border-gray-700 flex flex-col">
+            <div class="bg-gray-800 p-6 rounded-2xl shadow-2xl border border-gray-700">
                 <h2 class="text-2xl font-semibold mb-4 border-b border-gray-600 pb-3">Calcola Differenza tra Date</h2>
                 <div class="space-y-4">
                     <div class="flex items-center space-x-2">
+                         <!-- Input Data 1 -->
                         <div class="flex-grow">
                             <label for="date1" class="block text-sm font-medium text-gray-300 mb-1">Data 1</label>
                             <input type="date" id="date1" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 focus:outline-none">
                         </div>
+                        
+                        <!-- Pulsante Inverti -->
                         <div class="pt-6">
                             <button id="swapDatesBtn" title="Inverti le date" class="p-2 bg-gray-600 hover:bg-gray-500 rounded-full transition-colors duration-300">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -83,20 +84,20 @@
                                 </svg>
                             </button>
                         </div>
+
+                        <!-- Input Data 2 -->
                         <div class="flex-grow">
                             <label for="date2" class="block text-sm font-medium text-gray-300 mb-1">Data 2</label>
                             <input type="date" id="date2" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 focus:outline-none">
                         </div>
                     </div>
-                    <button id="calculateDifference" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-4 rounded-lg transition-colors duration-300">Calcola Differenza</button>
+                    
+                    <button id="calculateDifference" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-4 rounded-lg transition-colors duration-300">
+                        Calcola Differenza
+                    </button>
+                    
                     <div id="differenceOutput" class="mt-4 text-center bg-gray-900 p-4 rounded-lg min-h-[5rem] flex items-center justify-center">
                          <span class="text-lg font-medium text-gray-400">La differenza apparirà qui</span>
-                    </div>
-                </div>
-                 <div class="mt-4 pt-4 border-t border-gray-700">
-                    <button id="geminiHistoryBtn" class="w-full bg-gradient-to-r from-pink-500 to-rose-500 text-white font-bold py-3 px-4 rounded-lg transition-transform duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none" disabled>✨ Genera Eventi Storici</button>
-                    <div id="geminiHistoryOutput" class="mt-4 text-left bg-gray-900 p-4 rounded-lg min-h-[6rem] flex items-center justify-center text-gray-400">
-                        <span>I fatti storici generati dall'AI appariranno qui.</span>
                     </div>
                 </div>
             </div>
@@ -116,88 +117,54 @@
         const calculateDifferenceBtn = document.getElementById('calculateDifference');
         const differenceOutput = document.getElementById('differenceOutput');
 
-        // --- Elementi Gemini ---
-        const geminiIdeasBtn = document.getElementById('geminiIdeasBtn');
-        const geminiIdeasOutput = document.getElementById('geminiIdeasOutput');
-        const geminiHistoryBtn = document.getElementById('geminiHistoryBtn');
-        const geminiHistoryOutput = document.getElementById('geminiHistoryOutput');
-        
-        // --- Variabili di stato per i dati calcolati ---
-        let calculatedResultDate = null;
-        let calculatedDate1 = null;
-        let calculatedDate2 = null;
+        const presetButtonsContainer = document.getElementById('preset-buttons');
+        const presetError = document.getElementById('preset-error');
 
         /**
          * Formatta un oggetto Date in una stringa leggibile in italiano.
          */
         function formatItalianDate(date) {
-            return date.toLocaleDateString('it-IT', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            return date.toLocaleDateString('it-IT', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
         }
-        
-        /**
-         * Formatta un oggetto Date in una stringa YYYY-MM-DD.
-         */
-        function formatSimpleDate(date) {
-            return date.toISOString().split('T')[0];
-        }
-
 
         /**
          * Mostra un messaggio di errore o di risultato in un elemento di output.
          */
         function displayMessage(element, message, isError = false) {
-            element.innerHTML = '';
+            element.innerHTML = ''; 
             const span = document.createElement('span');
-            span.innerHTML = message.replace(/\n/g, '<br>'); // Converte newline in <br>
+            span.textContent = message;
             span.className = isError ? 'text-red-400 font-medium' : 'text-green-400 text-xl font-bold';
-            if (!isError && element.id.includes("Output")) {
-                 span.className = 'text-green-400 text-xl font-bold';
-            } else if (!isError) {
-                 span.className = 'text-gray-300 text-base';
-            }
             element.appendChild(span);
         }
 
-        /**
-         * Mostra un'animazione di caricamento in un elemento.
-         */
-        function showLoader(element) {
-            element.innerHTML = '<div class="loader mx-auto"></div>';
-        }
-
-        // --- Logica di Calcolo Base ---
+        // --- Logica di Calcolo ---
+        
         calculateResultDateBtn.addEventListener('click', () => {
             const startDateValue = startDateInput.value;
             const daysValue = daysInput.value;
 
-            // Disabilita il pulsante Gemini
-            geminiIdeasBtn.disabled = true;
-            geminiIdeasOutput.innerHTML = '<span>I suggerimenti dell\'AI appariranno qui.</span>';
-            calculatedResultDate = null;
-
-            if (!startDateValue || !daysValue) {
+            if (!startDateValue || daysValue === '') {
                 displayMessage(resultDateOutput, 'Per favore, inserisci sia la data di partenza che il numero di giorni.', true);
                 return;
             }
 
             const days = parseInt(daysValue, 10);
             const date = new Date(startDateValue + 'T00:00:00');
+            
             date.setDate(date.getDate() + days);
             
-            calculatedResultDate = date; // Salva la data calcolata
-            displayMessage(resultDateOutput, formatItalianDate(calculatedResultDate));
-            geminiIdeasBtn.disabled = false; // Abilita il pulsante Gemini
+            displayMessage(resultDateOutput, formatItalianDate(date));
         });
 
         calculateDifferenceBtn.addEventListener('click', () => {
             const date1Value = date1Input.value;
             const date2Value = date2Input.value;
-            
-            // Disabilita il pulsante Gemini
-            geminiHistoryBtn.disabled = true;
-            geminiHistoryOutput.innerHTML = '<span>I fatti storici generati dall\'AI appariranno qui.</span>';
-            calculatedDate1 = null;
-            calculatedDate2 = null;
 
             if (!date1Value || !date2Value) {
                 displayMessage(differenceOutput, 'Per favore, inserisci entrambe le date.', true);
@@ -206,88 +173,60 @@
             
             const date1 = new Date(date1Value + 'T00:00:00');
             const date2 = new Date(date2Value + 'T00:00:00');
-            
-            // Salva le date per la funzione Gemini
-            calculatedDate1 = date1;
-            calculatedDate2 = date2;
 
             const timeDiff = date2.getTime() - date1.getTime();
             const dayDiff = Math.round(timeDiff / (1000 * 3600 * 24));
             
             const plural = Math.abs(dayDiff) === 1 ? 'giorno' : 'giorni';
             displayMessage(differenceOutput, `${dayDiff} ${plural}`);
-            geminiHistoryBtn.disabled = false; // Abilita il pulsante Gemini
         });
-
+        
         swapDatesBtn.addEventListener('click', () => {
             const tempDate = date1Input.value;
             date1Input.value = date2Input.value;
             date2Input.value = tempDate;
         });
 
-        // --- Logica API Gemini ---
+        // --- Logica Pulsanti Preset ---
+        presetButtonsContainer.addEventListener('click', (e) => {
+            if (!e.target.classList.contains('preset-btn')) return;
 
-        const API_KEY = ""; // Lasciare vuoto, verrà gestito dall'ambiente
-
-        /**
-         * Chiama l'API di Gemini per generare testo.
-         * @param {string} prompt - Il prompt da inviare al modello.
-         * @param {HTMLElement} outputElement - L'elemento dove visualizzare il risultato.
-         */
-        async function callGemini(prompt, outputElement) {
-            showLoader(outputElement);
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
-            const payload = {
-                contents: [{ role: "user", parts: [{ text: prompt }] }]
-            };
-
-            try {
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                if (!response.ok) {
-                    throw new Error(`Errore API: ${response.status} ${response.statusText}`);
-                }
-
-                const result = await response.json();
-
-                if (result.candidates && result.candidates.length > 0) {
-                    const text = result.candidates[0].content.parts[0].text;
-                    displayMessage(outputElement, text, false);
-                } else {
-                    throw new Error("Nessun contenuto valido ricevuto dall'API.");
-                }
-            } catch (error) {
-                console.error("Errore nella chiamata a Gemini:", error);
-                displayMessage(outputElement, `Si è verificato un errore: ${error.message}`, true);
+            const startDateValue = startDateInput.value;
+            if (!startDateValue) {
+                presetError.textContent = 'Seleziona prima una data di partenza.';
+                setTimeout(() => { presetError.textContent = ''; }, 3000);
+                return;
             }
-        }
-
-        geminiIdeasBtn.addEventListener('click', () => {
-            if (!calculatedResultDate) return;
             
-            const formattedDate = formatItalianDate(calculatedResultDate);
-            const prompt = `Sei un assistente creativo. Fornisci 3 idee originali e interessanti su cosa fare il giorno ${formattedDate}. Considera la stagione e se è un giorno festivo in Italia. Rispondi in italiano con un elenco puntato.`;
-            callGemini(prompt, geminiIdeasOutput);
-        });
+            const button = e.target;
+            const value = parseInt(button.dataset.value);
+            const type = button.dataset.type;
+            const ONE_DAY_MS = 1000 * 60 * 60 * 24;
 
-        geminiHistoryBtn.addEventListener('click', () => {
-            if (!calculatedDate1 || !calculatedDate2) return;
+            let calculatedDays;
 
-            // Assicuriamoci che d1 sia sempre precedente a d2
-            const d1 = calculatedDate1 < calculatedDate2 ? calculatedDate1 : calculatedDate2;
-            const d2 = calculatedDate1 < calculatedDate2 ? calculatedDate2 : calculatedDate1;
-
-            const formattedDate1 = formatSimpleDate(d1);
-            const formattedDate2 = formatSimpleDate(d2);
-
-            const prompt = `Elenca 3 eventi storici, scientifici o culturali significativi accaduti tra il ${formattedDate1} e il ${formattedDate2}. Sii conciso e rispondi in italiano con un elenco puntato.`;
-            callGemini(prompt, geminiHistoryOutput);
+            if (type === 'days') {
+                calculatedDays = value;
+            } else if (type === 'weeks') {
+                calculatedDays = value * 7;
+            } else {
+                const startDate = new Date(startDateValue + 'T00:00:00');
+                const futureDate = new Date(startDate.getTime());
+                
+                if (type === 'months') {
+                    futureDate.setMonth(futureDate.getMonth() + value);
+                } else if (type === 'years') {
+                    futureDate.setFullYear(futureDate.getFullYear() + value);
+                }
+                
+                // Calcola la differenza precisa in giorni
+                calculatedDays = Math.round((futureDate - startDate) / ONE_DAY_MS);
+            }
+            
+            daysInput.value = calculatedDays;
         });
 
     </script>
+
 </body>
 </html>
