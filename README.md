@@ -1,1 +1,1 @@
-Semplice calcolatore di date
+Semplice calcolatore di date e ricerca giorno della settimana
