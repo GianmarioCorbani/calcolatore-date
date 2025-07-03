@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calcolatore di Date di Jimmy</title>
+    <title>Calcolatore di Date Avanzato</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,7 +12,6 @@
         body {
             font-family: 'Inter', sans-serif;
         }
-        /* Stile personalizzato per gli input di tipo date per mostrare l'icona del calendario */
         input[type="date"]::-webkit-calendar-picker-indicator {
             cursor: pointer;
             filter: invert(0.8);
@@ -21,18 +20,17 @@
 </head>
 <body class="bg-gray-900 text-white min-h-screen flex items-center justify-center p-4">
 
-    <div class="w-full max-w-4xl mx-auto">
+    <div class="w-full max-w-6xl mx-auto">
         <header class="text-center mb-10">
             <h1 class="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">Calcolatore di Date di Jimmy</h1>
-            <p class="text-gray-400 mt-2">Esegui calcoli tra date in modo semplice e veloce.</p>
+            <p class="text-gray-400 mt-2">Esegui calcoli, trova differenze e scopri il giorno della settimana.</p>
             <p class="text-gray-400 mt-2">Gianmario Corbani</p>
-        
         </header>
 
-        <main class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <main class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
             <!-- Card 1: Aggiungi/Sottrai Giorni -->
-            <div class="bg-gray-800 p-6 rounded-2xl shadow-2xl border border-gray-700">
+            <div class="bg-gray-800 p-6 rounded-2xl shadow-2xl border border-gray-700 flex flex-col">
                 <h2 class="text-2xl font-semibold mb-4 border-b border-gray-600 pb-3">Calcola Data Futura/Passata</h2>
                 <div class="space-y-4">
                     <div>
@@ -43,24 +41,19 @@
                         <label for="days" class="block text-sm font-medium text-gray-300 mb-1">Giorni da Aggiungere/Sottrarre</label>
                         <input type="number" id="days" placeholder="Es. 30 o -15" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 focus:outline-none">
                     </div>
-                    
-                    <!-- Pulsanti Preset -->
                     <div>
                         <label class="block text-sm font-medium text-gray-300 mb-2">Preset Rapidi:</label>
                         <div id="preset-buttons" class="grid grid-cols-3 gap-2">
                             <button data-value="180" data-type="days" class="preset-btn bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-3 rounded-lg text-sm transition-colors duration-200">180 giorni</button>
-                            <button data-value="26" data-type="weeks" class="preset-btn bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-3 rounded-lg text-sm transition-colors duration-200">26 settimane</button>
+                            <button data-value="26" data-type="weeks" class="preset-btn bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-3 rounded-lg text-sm transition-colors duration-200">26 sett.</button>
                             <button data-value="6" data-type="months" class="preset-btn bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-3 rounded-lg text-sm transition-colors duration-200">6 mesi</button>
-                            <button data-value="50" data-type="weeks" class="preset-btn bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-3 rounded-lg text-sm transition-colors duration-200">50 settimane</button>
-                            <button data-value="52" data-type="weeks" class="preset-btn bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-3 rounded-lg text-sm transition-colors duration-200">52 settimane</button>
+                            <button data-value="50" data-type="weeks" class="preset-btn bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-3 rounded-lg text-sm transition-colors duration-200">50 sett.</button>
+                            <button data-value="52" data-type="weeks" class="preset-btn bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-3 rounded-lg text-sm transition-colors duration-200">52 sett.</button>
                             <button data-value="1" data-type="years" class="preset-btn bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-3 rounded-lg text-sm transition-colors duration-200">1 anno</button>
                         </div>
                          <div id="preset-error" class="text-red-400 text-xs mt-2 h-4"></div>
                     </div>
-
-                    <button id="calculateResultDate" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition-colors duration-300">
-                        Calcola Data
-                    </button>
+                    <button id="calculateResultDate" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition-colors duration-300">Calcola Data</button>
                     <div id="resultDateOutput" class="mt-4 text-center bg-gray-900 p-4 rounded-lg min-h-[5rem] flex items-center justify-center">
                         <span class="text-lg font-medium text-gray-400">Il risultato apparirà qui</span>
                     </div>
@@ -68,17 +61,14 @@
             </div>
 
             <!-- Card 2: Differenza tra Date -->
-            <div class="bg-gray-800 p-6 rounded-2xl shadow-2xl border border-gray-700">
+            <div class="bg-gray-800 p-6 rounded-2xl shadow-2xl border border-gray-700 flex flex-col">
                 <h2 class="text-2xl font-semibold mb-4 border-b border-gray-600 pb-3">Calcola Differenza tra Date</h2>
                 <div class="space-y-4">
                     <div class="flex items-center space-x-2">
-                         <!-- Input Data 1 -->
                         <div class="flex-grow">
                             <label for="date1" class="block text-sm font-medium text-gray-300 mb-1">Data 1</label>
                             <input type="date" id="date1" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 focus:outline-none">
                         </div>
-                        
-                        <!-- Pulsante Inverti -->
                         <div class="pt-6">
                             <button id="swapDatesBtn" title="Inverti le date" class="p-2 bg-gray-600 hover:bg-gray-500 rounded-full transition-colors duration-300">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -86,20 +76,29 @@
                                 </svg>
                             </button>
                         </div>
-
-                        <!-- Input Data 2 -->
                         <div class="flex-grow">
                             <label for="date2" class="block text-sm font-medium text-gray-300 mb-1">Data 2</label>
                             <input type="date" id="date2" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 focus:outline-none">
                         </div>
                     </div>
-                    
-                    <button id="calculateDifference" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-4 rounded-lg transition-colors duration-300">
-                        Calcola Differenza
-                    </button>
-                    
+                    <button id="calculateDifference" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-4 rounded-lg transition-colors duration-300">Calcola Differenza</button>
                     <div id="differenceOutput" class="mt-4 text-center bg-gray-900 p-4 rounded-lg min-h-[5rem] flex items-center justify-center">
                          <span class="text-lg font-medium text-gray-400">La differenza apparirà qui</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 3: Giorno della Settimana -->
+            <div class="bg-gray-800 p-6 rounded-2xl shadow-2xl border border-gray-700 flex flex-col">
+                <h2 class="text-2xl font-semibold mb-4 border-b border-gray-600 pb-3">Scopri il Giorno della Settimana</h2>
+                <div class="space-y-4">
+                    <div>
+                        <label for="weekdayDate" class="block text-sm font-medium text-gray-300 mb-1">Seleziona una data</label>
+                        <input type="date" id="weekdayDate" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                    </div>
+                    <button id="calculateWeekday" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-4 rounded-lg transition-colors duration-300">Mostra Giorno</button>
+                    <div id="weekdayOutput" class="mt-4 text-center bg-gray-900 p-4 rounded-lg min-h-[5rem] flex items-center justify-center">
+                         <span class="text-lg font-medium text-gray-400">Il giorno apparirà qui</span>
                     </div>
                 </div>
             </div>
@@ -122,6 +121,10 @@
         const presetButtonsContainer = document.getElementById('preset-buttons');
         const presetError = document.getElementById('preset-error');
 
+        const weekdayDateInput = document.getElementById('weekdayDate');
+        const calculateWeekdayBtn = document.getElementById('calculateWeekday');
+        const weekdayOutput = document.getElementById('weekdayOutput');
+
         /**
          * Formatta un oggetto Date in una stringa leggibile in italiano.
          */
@@ -141,44 +144,36 @@
             element.innerHTML = ''; 
             const span = document.createElement('span');
             span.textContent = message;
-            span.className = isError ? 'text-red-400 font-medium' : 'text-green-400 text-xl font-bold';
+            span.className = isError ? 'text-red-400 font-medium' : 'text-green-400 text-xl font-bold capitalize';
             element.appendChild(span);
         }
 
-        // --- Logica di Calcolo ---
-        
+        // --- Logica Calcolo Data Risultante ---
         calculateResultDateBtn.addEventListener('click', () => {
             const startDateValue = startDateInput.value;
             const daysValue = daysInput.value;
-
             if (!startDateValue || daysValue === '') {
-                displayMessage(resultDateOutput, 'Per favore, inserisci sia la data di partenza che il numero di giorni.', true);
+                displayMessage(resultDateOutput, 'Inserisci data e giorni.', true);
                 return;
             }
-
             const days = parseInt(daysValue, 10);
             const date = new Date(startDateValue + 'T00:00:00');
-            
             date.setDate(date.getDate() + days);
-            
             displayMessage(resultDateOutput, formatItalianDate(date));
         });
 
+        // --- Logica Differenza Date ---
         calculateDifferenceBtn.addEventListener('click', () => {
             const date1Value = date1Input.value;
             const date2Value = date2Input.value;
-
             if (!date1Value || !date2Value) {
-                displayMessage(differenceOutput, 'Per favore, inserisci entrambe le date.', true);
+                displayMessage(differenceOutput, 'Inserisci entrambe le date.', true);
                 return;
             }
-            
             const date1 = new Date(date1Value + 'T00:00:00');
             const date2 = new Date(date2Value + 'T00:00:00');
-
             const timeDiff = date2.getTime() - date1.getTime();
             const dayDiff = Math.round(timeDiff / (1000 * 3600 * 24));
-            
             const plural = Math.abs(dayDiff) === 1 ? 'giorno' : 'giorni';
             displayMessage(differenceOutput, `${dayDiff} ${plural}`);
         });
@@ -192,43 +187,41 @@
         // --- Logica Pulsanti Preset ---
         presetButtonsContainer.addEventListener('click', (e) => {
             if (!e.target.classList.contains('preset-btn')) return;
-
             const startDateValue = startDateInput.value;
             if (!startDateValue) {
                 presetError.textContent = 'Seleziona prima una data di partenza.';
                 setTimeout(() => { presetError.textContent = ''; }, 3000);
                 return;
             }
-            
             const button = e.target;
             const value = parseInt(button.dataset.value);
             const type = button.dataset.type;
             const ONE_DAY_MS = 1000 * 60 * 60 * 24;
-
             let calculatedDays;
-
-            if (type === 'days') {
-                calculatedDays = value;
-            } else if (type === 'weeks') {
-                calculatedDays = value * 7;
-            } else {
+            if (type === 'days') calculatedDays = value;
+            else if (type === 'weeks') calculatedDays = value * 7;
+            else {
                 const startDate = new Date(startDateValue + 'T00:00:00');
                 const futureDate = new Date(startDate.getTime());
-                
-                if (type === 'months') {
-                    futureDate.setMonth(futureDate.getMonth() + value);
-                } else if (type === 'years') {
-                    futureDate.setFullYear(futureDate.getFullYear() + value);
-                }
-                
-                // Calcola la differenza precisa in giorni
+                if (type === 'months') futureDate.setMonth(futureDate.getMonth() + value);
+                else if (type === 'years') futureDate.setFullYear(futureDate.getFullYear() + value);
                 calculatedDays = Math.round((futureDate - startDate) / ONE_DAY_MS);
             }
-            
             daysInput.value = calculatedDays;
         });
-
+        
+        // --- Logica Giorno della Settimana ---
+        calculateWeekdayBtn.addEventListener('click', () => {
+            const weekdayDateValue = weekdayDateInput.value;
+            if (!weekdayDateValue) {
+                displayMessage(weekdayOutput, 'Per favore, inserisci una data.', true);
+                return;
+            }
+            const date = new Date(weekdayDateValue + 'T00:00:00');
+            const dayName = date.toLocaleDateString('it-IT', { weekday: 'long' });
+            displayMessage(weekdayOutput, dayName);
+        });
     </script>
-
 </body>
 </html>
+
